@@ -53,7 +53,6 @@ public class MSTApplication {
     private static void processMST(String inputFile, String outputFile) throws IOException {
         System.out.println("Processing input file: " + inputFile);
 
-        // Read input data
         InputData inputData;
         if (inputFile.contains("resources")) {
             try (InputStream inputStream = MSTApplication.class.getClassLoader().getResourceAsStream("input_example.json")) {
@@ -76,15 +75,15 @@ public class MSTApplication {
 
         System.out.println("Found " + inputData.getGraphs().size() + " graph(s) to process");
 
-        // Process each graph
+
+
+
         List<Result> results = new ArrayList<>();
         for (Graph graph : inputData.getGraphs()) {
             System.out.println("Processing graph ID: " + graph.getId());
             Result result = processGraph(graph);
             results.add(result);
         }
-
-        // Write output
         OutputData outputData = new OutputData(results);
         mapper.writerWithDefaultPrettyPrinter().writeValue(new File(outputFile), outputData);
 
@@ -97,7 +96,7 @@ public class MSTApplication {
 
         List<Graph> graphs = new ArrayList<>();
 
-        // Graph 1
+
         Graph graph1 = new Graph();
         graph1.setId(1);
         graph1.setNodes(Arrays.asList("A", "B", "C", "D", "E"));
@@ -133,16 +132,10 @@ public class MSTApplication {
     private static Result processGraph(Graph graph) {
         validateGraph(graph);
 
-        // Create adjacency list for Prim's algorithm
+
         Map<String, List<Edge>> adjacencyList = createAdjacencyList(graph);
-
-        // Run Prim's algorithm
         MSTResult primResult = PrimMST.findMST(graph.getNodes(), adjacencyList);
-
-        // Run Kruskal's algorithm
         MSTResult kruskalResult = KruskalMST.findMST(graph.getNodes(), graph.getEdges());
-
-        // Verify both algorithms produce same total cost
         if (primResult.getTotal_cost() != kruskalResult.getTotal_cost()) {
             System.err.println("Warning: MST costs differ for graph " + graph.getId() +
                     " (Prim: " + primResult.getTotal_cost() +

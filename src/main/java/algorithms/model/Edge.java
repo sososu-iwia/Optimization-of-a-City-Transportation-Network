@@ -38,7 +38,6 @@ public class Edge {
 
     @Override
     public int hashCode() {
-        // Consider edges undirected for hashCode
         String node1 = from.compareTo(to) < 0 ? from : to;
         String node2 = from.compareTo(to) < 0 ? to : from;
         return (node1 + node2).hashCode() + weight;

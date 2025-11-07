@@ -18,75 +18,66 @@ public class PrimMST {
             return new MSTResult(mstEdges, 0, operations, 0);
         }
 
-        // Start with first node
         String startNode = nodes.get(0);
         visited.add(startNode);
-        operations++; // add to visited
-
-        // Add all edges from start node to heap
+        operations++;
         List<Edge> startEdges = adjacencyList.get(startNode);
         for (Edge edge : startEdges) {
             minHeap.offer(edge);
-            operations++; // heap offer
+            operations++;
         }
-        operations += startEdges.size(); // for loop iterations
+        operations += startEdges.size();
 
         int totalCost = 0;
 
         while (!minHeap.isEmpty() && visited.size() < nodes.size()) {
-            operations++; // while condition check
+            operations++;
 
             Edge currentEdge = minHeap.poll();
-            operations++; // heap poll
+            operations++;
 
             String from = currentEdge.getFrom();
             String to = currentEdge.getTo();
 
-            operations += 2; // two contains checks
+            operations += 2;
             boolean fromVisited = visited.contains(from);
             boolean toVisited = visited.contains(to);
 
             String nextNode = null;
             if (fromVisited && !toVisited) {
                 nextNode = to;
-                operations++; // condition true
+                operations++;
             } else if (toVisited && !fromVisited) {
                 nextNode = from;
-                operations++; // condition true
+                operations++;
             }
-            operations++; // if-else structure
+            operations++;
 
             if (nextNode != null) {
-                operations++; // null check
+                operations++;
 
                 visited.add(nextNode);
-                operations++; // add to visited
+                operations++;
 
                 mstEdges.add(currentEdge);
-                operations++; // add to MST edges
-
+                operations++;
                 totalCost += currentEdge.getWeight();
-                operations++; // cost addition
-
-                // Add edges from the new node to the heap
+                operations++;
                 List<Edge> nextEdges = adjacencyList.get(nextNode);
                 for (Edge edge : nextEdges) {
-                    operations++; // for loop iteration
-
-                    operations++; // contains check
+                    operations++;
+                    operations++;
                     if (!visited.contains(edge.getTo())) {
                         minHeap.offer(edge);
-                        operations++; // heap offer
+                        operations++;
                     }
                 }
-                operations += nextEdges.size(); // total edges processed
+                operations += nextEdges.size();
             }
         }
 
         long endTime = System.nanoTime();
         double executionTimeMs = (endTime - startTime) / 1_000_000.0;
-
-        // Sort edges for consistent output
         mstEdges.sort((e1, e2) -> {
             int weightCompare = Integer.compare(e1.getWeight(), e2.getWeight());
             if (weightCompare != 0) return weightCompare;
